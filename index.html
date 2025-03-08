@@ -3,104 +3,1586 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katmai Settings</title>
+    <title>Katmai Quantum - Advanced 1-Qubit System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #111827; color: white; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --primary-glow: #8b5cf6;
+            --secondary: #c026d3;
+            --accent: #a855f7;
+            --accent-dark: #9333ea;
+            --bg-dark: #0f0720;
+            --bg-card: #1e1b2e;
+            --text-main: #f1f5f9;
+            --text-dim: #a8a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #818cf8;
+        }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .glow {
+            text-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--primary-glow);
+        }
+        
+        .glass {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .neo-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .neo-card:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                        0 0 10px rgba(37, 99, 235, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .gradient-border {
+            position: relative;
+            padding: 1px;
+            border-radius: 16px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent), var(--primary));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 15px;
+            z-index: -1;
+        }
+        
+        .glow-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .glow-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+        
+        .glow-button:hover::after {
+            left: 100%;
+            opacity: 1;
+        }
+        
+        .cyber-progress {
+            height: 6px;
+            width: 100%;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .cyber-progress-bar {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-glow));
+            box-shadow: 0 0 10px var(--primary-glow);
+            position: relative;
+            transition: width 0.5s ease;
+        }
+        
+        .cyber-progress-bar.success {
+            background: linear-gradient(90deg, var(--success), #34d399);
+        }
+        
+        .cyber-progress-bar.warning {
+            background: linear-gradient(90deg, var(--warning), #fbbf24);
+        }
+        
+        .cyber-progress-bar.danger {
+            background: linear-gradient(90deg, var(--danger), #f87171);
+        }
+        
+        .cyber-progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                                       transparent,
+                                       rgba(255, 255, 255, 0.2), 
+                                       transparent);
+            animation: shimmer 2s infinite;
+            background-size: 200% 100%;
+        }
+        
+        .hexagon {
+            position: relative;
+            width: 36px; 
+            height: 21px;
+            background-color: var(--primary);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+        
+        .hexagon:before,
+        .hexagon:after {
+            content: "";
+            position: absolute;
+            width: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+        }
+        
+        .hexagon:before {
+            bottom: 100%;
+            border-bottom: 10.5px solid var(--primary);
+        }
+        
+        .hexagon:after {
+            top: 100%;
+            border-top: 10.5px solid var(--primary);
+        }
+        
+        .quantum-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.07;
+            background-image: 
+                linear-gradient(to right, var(--primary-glow) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--primary-glow) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .pulse {
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        @keyframes glitch {
+            0% { transform: none; opacity: 1; }
+            7% { transform: skew(-0.5deg, -0.9deg); opacity: 0.75; }
+            10% { transform: none; opacity: 1; }
+            27% { transform: none; opacity: 1; }
+            30% { transform: skew(0.8deg, -0.1deg); opacity: 0.75; }
+            35% { transform: none; opacity: 1; }
+            52% { transform: none; opacity: 1; }
+            55% { transform: skew(-1deg, 0.2deg); opacity: 0.75; }
+            50% { transform: none; opacity: 1; }
+            72% { transform: none; opacity: 1; }
+            75% { transform: skew(0.4deg, 1deg); opacity: 0.75; }
+            80% { transform: none; opacity: 1; }
+            100% { transform: none; opacity: 1; }
+        }
+        
+        .scanner {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .scanner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -45%;
+            width: 35%;
+            height: 100%;
+            background: linear-gradient(
+                to right, 
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.03) 40%,
+                rgba(37, 99, 235, 0.4) 50%,
+                rgba(255, 255, 255, 0.03) 60%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-25deg);
+            animation: scanner 5s infinite;
+        }
+        
+        @keyframes scanner {
+            0% { left: -45%; }
+            100% { left: 145%; }
+        }
+        
+        .cyber-loader {
+            border: 3px solid rgba(255, 255, 255, 0.05);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Quantum particles */
+        .quantum-particle {
+            position: absolute;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: quantumFloat 10s infinite;
+        }
+        
+        @keyframes quantumFloat {
+            0% { transform: translate(0, 0); opacity: 0.2; }
+            25% { transform: translate(10px, -10px); opacity: 0.3; }
+            50% { transform: translate(0, -20px); opacity: 0.2; }
+            75% { transform: translate(-10px, -10px); opacity: 0.3; }
+            100% { transform: translate(0, 0); opacity: 0.2; }
+        }
+
+        /* Bloch sphere */
+        .bloch-sphere {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ffffff, #2563eb);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+            margin: 0 auto;
+        }
+        
+        .bloch-sphere::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(9,32,63,0.4) 100%);
+            z-index: 1;
+        }
+        
+        .bloch-arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80%;
+            height: 2px;
+            background: #ef4444;
+            transform-origin: left;
+            z-index: 2;
+            animation: rotateArrow 10s linear infinite;
+        }
+        
+        @keyframes rotateArrow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Toggle switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-card);
+            transition: .4s;
+            border-radius: 34px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 2px;
+            background-color: var(--text-dim);
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+            background-color: white;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.3);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-glow);
+        }
+        
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--bg-card) transparent transparent transparent;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* Badge styles */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.15rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+        
+        .badge-warning {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+        
+        .badge-danger {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+        
+        .badge-info {
+            background-color: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+        }
     </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: 'var(--primary)',
+                        'primary-dark': 'var(--primary-dark)',
+                        secondary: 'var(--secondary)',
+                        accent: 'var(--accent)',
+                        'accent-dark': 'var(--accent-dark)',
+                        dark: 'var(--bg-dark)',
+                        card: 'var(--bg-card)',
+                        success: 'var(--success)',
+                        warning: 'var(--warning)',
+                        danger: 'var(--danger)',
+                        info: 'var(--info)',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
+<body class="antialiased">
+    <div class="quantum-grid"></div>
+    
+    <!-- Quantum particles -->
+    <div class="quantum-particle" style="width: 100px; height: 100px; top: 20%; left: 80%;"></div>
+    <div class="quantum-particle" style="width: 120px; height: 120px; top: 60%; left: 10%;"></div>
+    <div class="quantum-particle" style="width: 80px; height: 80px; top: 40%; left: 50%;"></div>
+    
     <div class="flex flex-col min-h-screen">
         <!-- Header -->
-        <header class="bg-black p-4 border-b border-gray-700 flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <span class="text-gray-300 text-2xl">&lt;|&gt;</span>
-                <span class="text-xl font-medium">Katmai Computing</span>
-            </div>
-            <div class="flex items-center space-x-4">
-                <div id="time" class="text-gray-400"></div>
-                <button class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white">Log in</button>
+        <header class="glass border-b border-opacity-10 border-white sticky top-0 z-50">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative w-10 h-10 flex items-center justify-center group">
+                            <div class="absolute inset-0 bg-primary opacity-20 rounded-md group-hover:opacity-30 transition-opacity"></div>
+                            <span class="text-2xl orbitron font-bold glow">&lt;|&gt;</span>
+                        </div>
+                        <span class="orbitron text-xl font-semibold tracking-wider">KATMAI <span class="text-primary">QUANTUM</span></span>
+                    </div>
+                    
+                    <div class="flex items-center space-x-6">
+                        <div class="hidden md:flex items-center space-x-1">
+                            <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                            <span class="text-xs badge badge-success">SYSTEM ONLINE</span>
+                        </div>
+                        
+                        <div id="time" class="orbitron text-sm font-medium bg-card px-3 py-1 rounded-md"></div>
+                        
+                        <button class="glow-button bg-primary hover:bg-primary-dark text-white orbitron text-sm font-medium px-4 py-2 rounded-md flex items-center space-x-2 transition-all duration-300 shadow-lg shadow-primary/20">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>SECURE LOGIN</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </header>
 
         <!-- Main Content -->
-        <div class="flex flex-1">
+        <div class="flex flex-1 overflow-hidden">
             <!-- Sidebar -->
-            <div class="w-64 bg-gray-800 border-r border-gray-700 p-4">
-                <button class="flex items-center text-blue-400 p-2 rounded hover:bg-gray-700 w-full text-left mb-4">
-                    <span class="text-blue-400 mr-2">←</span>
-                    <span>Back</span>
-                </button>
-
-                <div class="flex items-center p-3 rounded bg-gray-700 cursor-pointer mb-4">
-                    <div class="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center mr-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
+            <aside class="w-64 glass border-r border-opacity-10 border-white p-4 relative hidden md:block">
+                <div class="absolute inset-0 overflow-hidden">
+                    <div class="absolute inset-0 opacity-5">
+                        <div class="absolute top-0 left-0 w-full h-full" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDIwIDAgTCAwIDAgMCAyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==');"></div>
                     </div>
-                    <span>System Settings</span>
                 </div>
-
-                <div class="flex items-center p-3 rounded hover:bg-gray-700 cursor-pointer">
-                    <div class="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center mr-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                
+                <div class="relative z-10">
+                    <button class="flex items-center text-primary p-2 rounded hover:bg-card w-full text-left mb-6 transition-all duration-300">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        <span>Back to Dashboard</span>
+                    </button>
+                    
+                    <div class="space-y-2 mb-6">
+                        <div class="text-xs text-primary uppercase mb-2 orbitron tracking-wider px-2">System Navigation</div>
+                        
+                        <div class="gradient-border mb-2">
+                            <div class="neo-card p-3 cursor-pointer flex items-center">
+                                <div class="mr-3 relative">
+                                    <div class="hexagon text-white">
+                                        <i class="fas fa-microchip text-xs"></i>
+                                    </div>
+                                </div>
+                                <span class="orbitron tracking-wide">Quantum Core</span>
+                            </div>
+                        </div>
+                        
+                        <div class="neo-card p-3 cursor-pointer hover:bg-opacity-70 mb-2 flex items-center transition-all duration-300">
+                            <div class="mr-3 relative">
+                                <div class="w-8 h-8 rounded-md bg-card border border-white border-opacity-10 flex items-center justify-center">
+                                    <i class="fas fa-server text-primary text-xs"></i>
+                                </div>
+                            </div>
+                            <span>Network</span>
+                        </div>
+                        
+                        <div class="neo-card p-3 cursor-pointer hover:bg-opacity-70 mb-2 flex items-center transition-all duration-300">
+                            <div class="mr-3 relative">
+                                <div class="w-8 h-8 rounded-md bg-card border border-white border-opacity-10 flex items-center justify-center">
+                                    <i class="fas fa-shield-alt text-primary text-xs"></i>
+                                </div>
+                            </div>
+                            <span>Security</span>
+                        </div>
+                        
+                        <div class="neo-card p-3 cursor-pointer hover:bg-opacity-70 mb-2 flex items-center transition-all duration-300">
+                            <div class="mr-3 relative">
+                                <div class="w-8 h-8 rounded-md bg-card border border-white border-opacity-10 flex items-center justify-center">
+                                    <i class="fas fa-database text-primary text-xs"></i>
+                                </div>
+                            </div>
+                            <span>Storage</span>
+                        </div>
+                        
+                        <div class="neo-card p-3 cursor-pointer hover:bg-opacity-70 flex items-center transition-all duration-300">
+                            <div class="mr-3 relative">
+                                <div class="w-8 h-8 rounded-md bg-card border border-white border-opacity-10 flex items-center justify-center">
+                                    <i class="fas fa-cog text-primary text-xs"></i>
+                                </div>
+                            </div>
+                            <span>Settings</span>
+                        </div>
+                        
+                        <div class="neo-card p-3 cursor-pointer hover:bg-opacity-70 flex items-center transition-all duration-300">
+                            <div class="mr-3 relative">
+                                <div class="w-8 h-8 rounded-md bg-card border border-white border-opacity-10 flex items-center justify-center">
+                                    <i class="fas fa-info-circle text-primary text-xs"></i>
+                                </div>
+                            </div>
+                            <span>About</span>
+                        </div>
                     </div>
-                    <span>About</span>
-                </div>
-            </div>
-
-            <!-- Main Settings Area -->
-            <div class="flex-1 p-8">
-                <div class="max-w-4xl mx-auto">
-                    <!-- Remote Access Settings -->
-                    <div class="mb-8">
-                        <h2 class="text-xl text-gray-400 mb-4">Remote Access</h2>
-                        <div class="bg-gray-800 rounded-lg p-4 mb-4">
-                            <div class="flex justify-between items-center">
-                                <div>Remote Assistance</div>
-                                <button class="px-3 py-1 rounded text-blue-400 hover:text-blue-300">Connect</button>
+                    
+                    <div class="mt-8">
+                        <div class="neo-card p-4 scanner">
+                            <div class="text-xs text-primary uppercase mb-3 orbitron">System Metrics</div>
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-xs flex items-center">
+                                        <i class="fas fa-microchip mr-1.5 text-primary"></i>
+                                        CPU Usage
+                                    </span>
+                                    <span class="text-xs text-primary">24%</span>
+                                </div>
+                                <div class="cyber-progress">
+                                    <div class="cyber-progress-bar success" style="width: 24%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-xs flex items-center">
+                                        <i class="fas fa-memory mr-1.5 text-primary"></i>
+                                        Memory
+                                    </span>
+                                    <span class="text-xs text-primary">46%</span>
+                                </div>
+                                <div class="cyber-progress">
+                                    <div class="cyber-progress-bar success" style="width: 46%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-xs flex items-center">
+                                        <i class="fas fa-hdd mr-1.5 text-primary"></i>
+                                        Storage
+                                    </span>
+                                    <span class="text-xs text-warning">67%</span>
+                                </div>
+                                <div class="cyber-progress">
+                                    <div class="cyber-progress-bar warning" style="width: 67%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-xs flex items-center">
+                                        <i class="fas fa-network-wired mr-1.5 text-primary"></i>
+                                        Network
+                                    </span>
+                                    <span class="text-xs text-primary">12%</span>
+                                </div>
+                                <div class="cyber-progress">
+                                    <div class="cyber-progress-bar success" style="width: 12%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="neo-card p-4 mt-4">
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs text-primary uppercase orbitron">Quantum Status</div>
+                                <span class="badge badge-success text-xs">Stable</span>
+                            </div>
+                            <div class="mt-3 text-center">
+                                <div class="text-sm mb-2">Coherence Time</div>
+                                <div class="text-2xl font-bold text-primary orbitron">245 µs</div>
+                                <div class="text-xs text-text-dim mt-1">Optimal range: 200-250 µs</div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </aside>
 
-                    <!-- System Settings -->
+            <!-- Mobile menu button -->
+            <div class="fixed bottom-4 left-4 z-50 md:hidden">
+                <button id="mobile-menu-btn" class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Main Settings Area -->
+            <div class="flex-1 p-4 md:p-8 overflow-y-auto">
+                <div class="max-w-6xl mx-auto">
                     <div class="mb-8">
-                        <h2 class="text-xl text-gray-400 mb-4">System and Resources</h2>
-                        <div class="bg-gray-800 rounded-lg p-4">
-                            <div class="border-b border-gray-700 pb-4 mb-4">
-                                <div class="flex items-center mb-2">
-                                    <div class="w-5 h-5 rounded-full mr-3 bg-green-500 flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                        </svg>
+                        <div class="flex items-center">
+                            <h1 class="orbitron text-3xl font-bold">Quantum Core Control</h1>
+                            <span class="ml-3 badge badge-success">1-Qubit</span>
+                        </div>
+                        <p class="text-text-dim mt-2">Advanced quantum system control and management interface</p>
+                    </div>
+                    
+                    <!-- Alert message -->
+                    <div class="mb-8 neo-card p-4 border-l-4 border-primary bg-primary bg-opacity-5 flex items-start">
+                        <div class="mr-4 text-primary">
+                            <i class="fas fa-info-circle text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-primary">Welcome to the Katmai Quantum Control Interface</h3>
+                            <p class="text-sm mt-1">Your 1-qubit quantum system is running optimally. Check the Quantum State Analysis section for detailed coherence metrics.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                        <!-- System Overview Card -->
+                        <div class="neo-card p-5 scanner col-span-1 lg:col-span-2">
+                            <div class="flex justify-between items-start mb-6">
+                                <h2 class="orbitron text-lg font-medium">System Overview</h2>
+                                <div class="flex items-center space-x-1 badge badge-success">
+                                    <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse mr-1"></div>
+                                    <span>OPERATIONAL</span>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                <div class="neo-card p-4 rounded-md border border-white border-opacity-5 hover:border-opacity-10 transition-all">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <div class="text-xs text-text-dim mb-1">QUANTUM PROCESSOR</div>
+                                            <div class="text-sm font-medium">RP2350 QPU</div>
+                                        </div>
+                                        <i class="fas fa-atom text-primary"></i>
                                     </div>
-                                    <span>System is up to date</span>
+                                    <div class="mt-4 flex items-center">
+                                        <div class="text-primary text-lg font-bold">1</div>
+                                        <div class="text-xs ml-1">QUBIT SYSTEM</div>
+                                    </div>
+                                    <div class="text-xs text-text-dim mt-2">Gate fidelity: 99.8%</div>
+                                </div>
+                                
+                                <div class="neo-card p-4 rounded-md border border-white border-opacity-5 hover:border-opacity-10 transition-all">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <div class="text-xs text-text-dim mb-1">ADC RESOLUTION</div>
+                                            <div class="text-sm font-medium">High Precision</div>
+                                        </div>
+                                        <i class="fas fa-wave-square text-primary"></i>
+                                    </div>
+                                    <div class="mt-4 flex items-center">
+                                        <div class="text-primary text-lg font-bold">24</div>
+                                        <div class="text-xs ml-1">BIT RESOLUTION</div>
+                                    </div>
+                                    <div class="text-xs text-text-dim mt-2">Sample rate: 2.4 GSa/s</div>
+                                </div>
+                                
+                                <div class="neo-card p-4 rounded-md border border-white border-opacity-5 hover:border-opacity-10 transition-all">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <div class="text-xs text-text-dim mb-1">POWER CONSUMPTION</div>
+                                            <div class="text-sm font-medium">USB Type-C</div>
+                                        </div>
+                                        <i class="fas fa-bolt text-primary"></i>
+                                    </div>
+                                    <div class="mt-4 flex items-center">
+                                        <div class="text-primary text-lg font-bold">15W</div>
+                                        <div class="text-xs ml-1">PD 3.0 COMPLIANT</div>
+                                    </div>
+                                    <div class="text-xs text-text-dim mt-2">Est. battery life: 8.5 hours</div>
+                                </div>
+                            </div>
+                            
+                            <div class="rounded-md p-4 bg-primary bg-opacity-10 border border-primary border-opacity-20 flex items-center mb-6">
+                                <div class="w-10 h-10 rounded-full bg-primary bg-opacity-20 flex items-center justify-center mr-4">
+                                    <i class="fas fa-check text-primary"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm font-medium">System is up to date</div>
+                                    <div class="text-xs text-text-dim mt-1">Katmai OS v2.7.4 • Last checked: Today at 05:14</div>
+                                </div>
+                                <div class="ml-auto">
+                                    <button class="text-xs px-3 py-1.5 rounded-md border border-primary text-primary hover:bg-primary hover:bg-opacity-30 transition-colors duration-300">
+                                        Check Again
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="orbitron text-sm mb-3">System Activity</div>
+                                <div class="space-y-2.5">
+                                    <div class="flex items-center p-3 rounded-md bg-card bg-opacity-50 hover:bg-opacity-70 transition-colors duration-300">
+                                        <div class="w-8 h-8 rounded-md bg-green-900 bg-opacity-30 flex items-center justify-center mr-3">
+                                            <i class="fas fa-shield-alt text-green-400 text-xs"></i>
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="text-sm">Security scan completed</div>
+                                            <div class="text-xs text-text-dim">No threats detected</div>
+                                        </div>
+                                        <div class="text-xs text-text-dim">13:42</div>
+                                    </div>
+                                    
+                                    <div class="flex items-center p-3 rounded-md bg-card bg-opacity-50 hover:bg-opacity-70 transition-colors duration-300">
+                                        <div class="w-8 h-8 rounded-md bg-primary bg-opacity-30 flex items-center justify-center mr-3">
+                                            <i class="fas fa-sync text-primary text-xs"></i>
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="text-sm">Quantum state calibration</div>
+                                            <div class="text-xs text-text-dim">Auto-calibration completed successfully</div>
+                                        </div>
+                                        <div class="text-xs text-text-dim">10:26</div>
+                                    </div>
+                                    
+                                    <div class="flex items-center p-3 rounded-md bg-card bg-opacity-50 hover:bg-opacity-70 transition-colors duration-300">
+                                        <div class="w-8 h-8 rounded-md bg-accent bg-opacity-30 flex items-center justify-center mr-3">
+                                            <i class="fas fa-cog text-accent text-xs"></i>
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="text-sm">System updated</div>
+                                            <div class="text-xs text-text-dim">Katmai OS v2.7.4</div>
+                                        </div>
+                                        <div class="text-xs text-text-dim">09:18</div>
+                                    </div>
+                                    
+                                    <div class="flex items-center p-3 rounded-md bg-card bg-opacity-50 hover:bg-opacity-70 transition-colors duration-300">
+                                        <div class="w-8 h-8 rounded-md bg-yellow-900 bg-opacity-30 flex items-center justify-center mr-3">
+                                            <i class="fas fa-exclamation-triangle text-yellow-400 text-xs"></i>
+                                        </div>
+                                        <div class="flex-grow">
+                                            <div class="text-sm">Kernel optimization recommended</div>
+                                            <div class="text-xs text-text-dim">Performance improvements available</div>
+                                        </div>
+                                        <div class="text-xs text-text-dim">Yesterday</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quantum State Visualization -->
+                        <div class="neo-card p-5">
+                            <h2 class="orbitron text-lg font-medium mb-4">Quantum State</h2>
+                            
+                            <div class="mb-6">
+                                <div class="bloch-sphere mb-4">
+                                    <div class="bloch-arrow"></div>
+                                </div>
+                                <div class="text-center text-sm">Bloch Sphere Representation</div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center p-2">
+                                    <span class="text-sm">State Vector</span>
+                                    <span class="text-sm font-mono">|0⟩ + 0.5|1⟩</span>
+                                </div>
+                                
+                                <div class="flex justify-between items-center p-2">
+                                    <span class="text-sm">Probability |0⟩</span>
+                                    <span class="text-sm font-mono">0.80</span>
+                                </div>
+                                
+                                <div class="flex justify-between items-center p-2">
+                                    <span class="text-sm">Probability |1⟩</span>
+                                    <span class="text-sm font-mono">0.20</span>
+                                </div>
+                                
+                                <div class="flex justify-between items-center p-2">
+                                    <span class="text-sm">Phase</span>
+                                    <span class="text-sm font-mono">0.00 rad</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 pt-4 border-t border-white border-opacity-10">
+                                <button class="w-full neo-card hover:bg-primary hover:bg-opacity-20 p-3 rounded-md flex items-center justify-center transition-all duration-300">
+                                    <i class="fas fa-atom text-primary mr-2"></i>
+                                    <span>Run Quantum Circuit</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions Section -->
+                    <div class="mb-8">
+                        <h2 class="orbitron text-xl font-medium mb-4">Quick Actions</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <button class="neo-card p-4 hover:bg-primary hover:bg-opacity-20 rounded-md flex flex-col items-center text-center transition-all duration-300">
+                                <div class="w-12 h-12 rounded-full bg-primary bg-opacity-20 flex items-center justify-center mb-3">
+                                    <i class="fas fa-sync text-primary"></i>
+                                </div>
+                                <span class="text-sm">Recalibrate Qubit</span>
+                            </button>
+                            
+                            <button class="neo-card p-4 hover:bg-primary hover:bg-opacity-20 rounded-md flex flex-col items-center text-center transition-all duration-300">
+                                <div class="w-12 h-12 rounded-full bg-primary bg-opacity-20 flex items-center justify-center mb-3">
+                                    <i class="fas fa-wave-square text-primary"></i>
+                                </div>
+                                <span class="text-sm">Pulse Sequence</span>
+                            </button>
+                            
+                            <button class="neo-card p-4 hover:bg-primary hover:bg-opacity-20 rounded-md flex flex-col items-center text-center transition-all duration-300">
+                                <div class="w-12 h-12 rounded-full bg-primary bg-opacity-20 flex items-center justify-center mb-3">
+                                    <i class="fas fa-chart-line text-primary"></i>
+                                </div>
+                                <span class="text-sm">Tomography</span>
+                            </button>
+                            
+                            <button class="neo-card p-4 hover:bg-primary hover:bg-opacity-20 rounded-md flex flex-col items-center text-center transition-all duration-300">
+                                <div class="w-12 h-12 rounded-full bg-primary bg-opacity-20 flex items-center justify-center mb-3">
+                                    <i class="fas fa-temperature-low text-primary"></i>
+                                </div>
+                                <span class="text-sm">Temperature Control</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Remote Control Panel -->
+                    <div class="mb-8">
+                        <h2 class="orbitron text-xl font-medium mb-4">Remote Access & Control</h2>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="neo-card p-5 scanner">
+                                <div class="flex items-center justify-between mb-6">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                            <i class="fas fa-network-wired text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <div class="orbitron text-base">Remote Assistance</div>
+                                            <div class="text-xs text-text-dim">Secure connection protocol</div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button class="glow-button bg-primary hover:bg-primary-dark text-white text-sm font-medium px-4 py-2 rounded-md transition-all duration-300 shadow-md">
+                                            Connect
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-sm">Connection Status</div>
+                                        <div class="badge badge-info">Standby</div>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-sm">Last Access</div>
+                                        <div class="text-xs">2025-03-06 15:42</div>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-sm">Authentication</div>
+                                        <div class="badge badge-success">Multi-factor</div>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center">
+                                        <div class="text-sm">Encryption</div>
+                                        <div class="badge badge-success">AES-256</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 p-3 rounded-md bg-primary bg-opacity-10 border border-primary border-opacity-20">
+                                    <div class="flex items-start">
+                                        <i class="fas fa-info-circle text-primary mt-0.5 mr-2"></i>
+                                        <div>
+                                            <div class="text-xs text-primary mb-1">Security Tip</div>
+                                            <div class="text-xs text-text-dim">Enable remote assistance only when needed and disconnect immediately after use.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="neo-card p-5">
+                                <div class="flex items-center mb-6">
+                                    <div class="w-10 h-10 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                        <i class="fas fa-desktop text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <div class="orbitron text-base">Virtual Interface</div>
+                                        <div class="text-xs text-text-dim">Access your quantum system remotely</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-4 mb-6">
+                                    <div class="flex items-center justify-between">
+                                        <div class="text-sm flex items-center">
+                                            <span>Enable Virtual Interface</span>
+                                            <div class="tooltip ml-1">
+                                                <i class="fas fa-question-circle text-text-dim text-xs"></i>
+                                                <span class="tooltiptext">Allow secure remote access to your quantum system's interface</span>
+                                            </div>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div class="text-sm flex items-center">
+                                            <span>Allow File Transfer</span>
+                                            <div class="tooltip ml-1">
+                                                <i class="fas fa-question-circle text-text-dim text-xs"></i>
+                                                <span class="tooltiptext">Enable secure transfer of quantum circuit files and measurement data</span>
+                                            </div>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div class="text-sm flex items-center">
+                                            <span>Auto-disconnect After Inactivity</span>
+                                            <div class="tooltip ml-1">
+                                                <i class="fas fa-question-circle text-text-dim text-xs"></i>
+                                                <span class="tooltiptext">Automatically end remote session after 30 minutes of inactivity</span>
+                                            </div>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div class="text-sm flex items-center">
+                                            <span>Secure Connection Only</span>
+                                            <div class="tooltip ml-1">
+                                                <i class="fas fa-question-circle text-text-dim text-xs"></i>
+                                                <span class="tooltiptext">Only allow connections via encrypted channels (TLS 1.3+)</span>
+                                            </div>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="text-sm mb-2">Connection ID</div>
+                                    <div class="flex">
+                                        <input type="text" value="KTM-9871-XRTY-4562" readonly class="flex-grow bg-card border border-white border-opacity-10 rounded-l-md p-2 text-xs font-mono focus:outline-none">
+                                        <button class="bg-primary hover:bg-primary-dark px-3 py-2 rounded-r-md text-white transition-colors duration-300">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                    <div class="text-xs text-text-dim mt-2">Share this ID with authorized personnel only</div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Quantum Stability & Protection -->
+                    <div class="mb-8">
+                        <h2 class="orbitron text-xl font-medium mb-4">Quantum Stability & Protection</h2>
+                        <div class="neo-card p-5 scanner">
+                            <div class="flex items-start mb-6">
+                                <div class="w-12 h-12 rounded-md bg-green-900 bg-opacity-30 flex items-center justify-center mr-4">
+                                    <i class="fas fa-shield-alt text-green-400"></i>
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="flex items-center">
+                                        <div class="orbitron text-base mr-3">Quantum Security Status</div>
+                                        <div class="badge badge-success">Protected</div>
+                                    </div>
+                                    <div class="text-xs text-text-dim mt-1">All systems are actively monitored and protected against decoherence and interference.</div>
+                                </div>
+                                <div>
+                                    <button class="px-3 py-1.5 text-xs rounded-md border border-white border-opacity-10 hover:bg-card transition-colors duration-300">
+                                        View Details
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                <div class="neo-card p-3 rounded-md border border-white border-opacity-5 hover:border-opacity-10 transition-all">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="text-sm">Quantum Stability</div>
+                                        <div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+                                            <i class="fas fa-check text-xs"></i>
+                                        </div>
+                                    </div>
+                                    <div class="text-xs text-text-dim">Decoherence protection active</div>
+                                    <div class="text-xs text-primary mt-1">T₁: 245 µs • T₂: 192 µs</div>
+                                </div>
+                                
+                                <div class="neo-card p-3 rounded-md border border-white border-opacity-5 hover:border-opacity-10 transition-all">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="text-sm">Error Correction</div>
+                                        <div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+                                            <i class="fas fa-check text-xs"></i>
+                                        </div>
+                                    </div>
+                                    <div class="text-xs text-text-dim">Surface code active</div>
+                                    <div class="text-xs text-primary mt-1">Error rate: 0.17%</div>
+                                </div>
+                                
+                                <div class="neo-card p-3 rounded-md border border-white border-opacity-5 hover:border-opacity-10 transition-all">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="text-sm">Qubit Isolation</div>
+                                        <div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+                                            <i class="fas fa-check text-xs"></i>
+                                        </div>
+                                    </div>
+                                    <div class="text-xs text-text-dim">Interference shielding active</div>
+                                    <div class="text-xs text-primary mt-1">Signal-to-noise: 42dB</div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="orbitron text-sm mb-3">Coherence Monitor</div>
+                                <div class="h-48 p-4 neo-card rounded-md relative overflow-hidden scanner">
+                                    <div class="absolute inset-0 opacity-10">
+                                        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                                            <defs>
+                                                <pattern id="smallGrid" width="8" height="8" patternUnits="userSpaceOnUse">
+                                                    <path d="M 8 0 L 0 0 0 8" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+                                                </pattern>
+                                                <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+                                                    <rect width="80" height="80" fill="url(#smallGrid)"/>
+                                                    <path d="M 80 0 L 0 0 0 80" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+                                                </pattern>
+                                            </defs>
+                                            <rect width="100%" height="100%" fill="url(#grid)" />
+                                        </svg>
+                                    </div>
+                                    
+                                    <div class="relative z-10 h-full flex flex-col justify-center items-center">
+                                        <div class="w-20 h-20 rounded-full border-3 border-green-400 flex items-center justify-center mb-4 pulse">
+                                            <i class="fas fa-atom text-green-400 text-2xl"></i>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="orbitron text-xl mb-1">Quantum Coherence: 99.2%</div>
+                                            <div class="text-sm text-text-dim">Qubit stability optimal</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Performance Metrics -->
+                    <div class="mb-8">
+                        <h2 class="orbitron text-xl font-medium mb-4">Performance Metrics</h2>
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="neo-card p-5 lg:col-span-2">
+                                <div class="orbitron text-base mb-4">System Utilization</div>
+                                <div class="h-64 neo-card p-4 rounded-md relative overflow-hidden scanner">
+                                    <div class="absolute inset-0 opacity-10">
+                                        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                                            <defs>
+                                                <pattern id="grid2" width="40" height="40" patternUnits="userSpaceOnUse">
+                                                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(124,58,237,0.3)" stroke-width="1"/>
+                                                </pattern>
+                                            </defs>
+                                            <rect width="100%" height="100%" fill="url(#grid2)" />
+                                        </svg>
+                                    </div>
+                                    
+                                    <div class="relative z-10 flex items-end h-full space-x-6 justify-center">
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-16 bg-primary bg-opacity-20 rounded-md">
+                                                <div class="bg-primary h-32 rounded-t-md"></div>
+                                            </div>
+                                            <div class="text-xs mt-2">CPU</div>
+                                            <div class="text-xs text-primary">24%</div>
+                                        </div>
+                                        
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-16 bg-primary bg-opacity-20 rounded-md">
+                                                <div class="bg-primary h-48 rounded-t-md"></div>
+                                            </div>
+                                            <div class="text-xs mt-2">Memory</div>
+                                            <div class="text-xs text-primary">46%</div>
+                                        </div>
+                                        
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-16 bg-primary bg-opacity-20 rounded-md">
+                                                <div class="bg-primary h-24 rounded-t-md"></div>
+                                            </div>
+                                            <div class="text-xs mt-2">Disk I/O</div>
+                                            <div class="text-xs text-primary">15%</div>
+                                        </div>
+                                        
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-16 bg-primary bg-opacity-20 rounded-md">
+                                                <div class="bg-primary h-16 rounded-t-md"></div>
+                                            </div>
+                                            <div class="text-xs mt-2">Network</div>
+                                            <div class="text-xs text-primary">10%</div>
+                                        </div>
+                                        
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-16 bg-primary bg-opacity-20 rounded-md">
+                                                <div class="bg-primary h-40 rounded-t-md"></div>
+                                            </div>
+                                            <div class="text-xs mt-2">QPU</div>
+                                            <div class="text-xs text-primary">38%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 mt-6">
+                                    <div class="neo-card p-3 rounded-md">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <div class="text-sm">Gate Operations</div>
+                                            <div class="text-sm text-primary font-mono">3,452</div>
+                                        </div>
+                                        <div class="cyber-progress">
+                                            <div class="cyber-progress-bar success" style="width: 34%"></div>
+                                        </div>
+                                        <div class="text-xs text-text-dim mt-1">Operations per second</div>
+                                    </div>
+                                    
+                                    <div class="neo-card p-3 rounded-md">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <div class="text-sm">Quantum Cycle</div>
+                                            <div class="text-sm text-primary font-mono">156 ns</div>
+                                        </div>
+                                        <div class="cyber-progress">
+                                            <div class="cyber-progress-bar success" style="width: 22%"></div>
+                                        </div>
+                                        <div class="text-xs text-text-dim mt-1">Average cycle time</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="neo-card p-5">
+                                <div class="orbitron text-base mb-4">Active Processes</div>
+                                <div class="space-y-2.5">
+                                    <div class="flex justify-between items-center p-3 neo-card rounded-md hover:bg-opacity-70 transition-colors duration-300">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                                <i class="fas fa-atom text-primary text-xs"></i>
+                                            </div>
+                                            <span class="text-sm">Qubit Controller</span>
+                                        </div>
+                                        <div class="badge badge-success">Active</div>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center p-3 neo-card rounded-md hover:bg-opacity-70 transition-colors duration-300">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                                <i class="fas fa-wave-square text-primary text-xs"></i>
+                                            </div>
+                                            <span class="text-sm">24-bit ADC</span>
+                                        </div>
+                                        <div class="badge badge-success">Sampling</div>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center p-3 neo-card rounded-md hover:bg-opacity-70 transition-colors duration-300">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                                <i class="fas fa-microchip text-primary text-xs"></i>
+                                            </div>
+                                            <span class="text-sm">RP2350 Core</span>
+                                        </div>
+                                        <div class="badge badge-success">Running</div>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center p-3 neo-card rounded-md hover:bg-opacity-70 transition-colors duration-300">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                                <i class="fas fa-temperature-low text-primary text-xs"></i>
+                                            </div>
+                                            <span class="text-sm">Cooling System</span>
+                                        </div>
+                                        <div class="badge badge-success">Optimal</div>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center p-3 neo-card rounded-md hover:bg-opacity-70 transition-colors duration-300">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                                <i class="fas fa-bolt text-primary text-xs"></i>
+                                            </div>
+                                            <span class="text-sm">USB-C Power</span>
+                                        </div>
+                                        <div class="badge badge-success">15W</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 pt-4 border-t border-white border-opacity-10">
+                                    <button class="w-full bg-primary bg-opacity-20 hover:bg-opacity-30 p-2.5 rounded-md text-sm text-primary transition-colors duration-300">
+                                        <i class="fas fa-list-ul mr-2"></i>
+                                        View All Processes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quantum Programming Section -->
+                    <div class="mb-8">
+                        <h2 class="orbitron text-xl font-medium mb-4">Quantum Programming</h2>
+                        <div class="neo-card p-5">
+                            <div class="flex items-center mb-6">
+                                <div class="w-10 h-10 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                    <i class="fas fa-code text-primary"></i>
+                                </div>
+                                <div>
+                                    <div class="orbitron text-base">Circuit Designer</div>
+                                    <div class="text-xs text-text-dim">Create and run quantum algorithms</div>
+                                </div>
+                                <div class="ml-auto">
+                                    <button class="glow-button bg-primary hover:bg-primary-dark text-white text-sm font-medium px-4 py-2 rounded-md transition-all duration-300 shadow-md">
+                                        New Circuit
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <div class="text-sm mb-3">Recent Circuits</div>
+                                    <div class="space-y-2">
+                                        <div class="neo-card p-3 rounded-md flex items-center hover:bg-opacity-70 transition-all duration-300 cursor-pointer">
+                                            <div class="w-8 h-8 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                                <i class="fas fa-file-code text-primary text-xs"></i>
+                                            </div>
+                                            <div class="flex-grow">
+                                                <div class="text-sm">Bell State Preparation</div>
+                                                <div class="text-xs text-text-dim">Modified 2 hours ago</div>
+                                            </div>
+                                            <div>
+                                                <button class="text-primary hover:text-accent transition-colors">
+                                                    <i class="fas fa-play"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="neo-card p-3 rounded-md flex items-center hover:bg-opacity-70 transition-all duration-300 cursor-pointer">
+                                            <div class="w-8 h-8 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                                <i class="fas fa-file-code text-primary text-xs"></i>
+                                            </div>
+                                            <div class="flex-grow">
+                                                <div class="text-sm">Quantum Fourier Transform</div>
+                                                <div class="text-xs text-text-dim">Modified yesterday</div>
+                                            </div>
+                                            <div>
+                                                <button class="text-primary hover:text-accent transition-colors">
+                                                    <i class="fas fa-play"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="neo-card p-3 rounded-md flex items-center hover:bg-opacity-70 transition-all duration-300 cursor-pointer">
+                                            <div class="w-8 h-8 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                                <i class="fas fa-file-code text-primary text-xs"></i>
+                                            </div>
+                                            <div class="flex-grow">
+                                                <div class="text-sm">Grover's Algorithm</div>
+                                                <div class="text-xs text-text-dim">Modified 3 days ago</div>
+                                            </div>
+                                            <div>
+                                                <button class="text-primary hover:text-accent transition-colors">
+                                                    <i class="fas fa-play"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="text-sm mb-3">Available Gates</div>
+                                    <div class="grid grid-cols-4 gap-2">
+                                        <div class="neo-card p-2 rounded-md text-center hover:bg-primary hover:bg-opacity-20 transition-all duration-300 cursor-pointer">
+                                            <div class="text-primary font-mono font-bold">H</div>
+                                            <div class="text-xs">Hadamard</div>
+                                        </div>
+                                        
+                                        <div class="neo-card p-2 rounded-md text-center hover:bg-primary hover:bg-opacity-20 transition-all duration-300 cursor-pointer">
+                                            <div class="text-primary font-mono font-bold">X</div>
+                                            <div class="text-xs">Pauli-X</div>
+                                        </div>
+                                        
+                                        <div class="neo-card p-2 rounded-md text-center hover:bg-primary hover:bg-opacity-20 transition-all duration-300 cursor-pointer">
+                                            <div class="text-primary font-mono font-bold">Y</div>
+                                            <div class="text-xs">Pauli-Y</div>
+                                        </div>
+                                        
+                                        <div class="neo-card p-2 rounded-md text-center hover:bg-primary hover:bg-opacity-20 transition-all duration-300 cursor-pointer">
+                                            <div class="text-primary font-mono font-bold">Z</div>
+                                            <div class="text-xs">Pauli-Z</div>
+                                        </div>
+                                        
+                                        <div class="neo-card p-2 rounded-md text-center hover:bg-primary hover:bg-opacity-20 transition-all duration-300 cursor-pointer">
+                                            <div class="text-primary font-mono font-bold">S</div>
+                                            <div class="text-xs">Phase</div>
+                                        </div>
+                                        
+                                        <div class="neo-card p-2 rounded-md text-center hover:bg-primary hover:bg-opacity-20 transition-all duration-300 cursor-pointer">
+                                            <div class="text-primary font-mono font-bold">T</div>
+                                            <div class="text-xs">π/8</div>
+                                        </div>
+                                        
+                                        <div class="neo-card p-2 rounded-md text-center hover:bg-primary hover:bg-opacity-20 transition-all duration-300 cursor-pointer">
+                                            <div class="text-primary font-mono font-bold">Rx</div>
+                                            <div class="text-xs">Rotate-X</div>
+                                        </div>
+                                        
+                                        <div class="neo-card p-2 rounded-md text-center hover:bg-primary hover:bg-opacity-20 transition-all duration-300 cursor-pointer">
+                                            <div class="text-primary font-mono font-bold">M</div>
+                                            <div class="text-xs">Measure</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-4">
+                                        <button class="w-full bg-primary bg-opacity-20 hover:bg-opacity-30 p-2 rounded-md text-sm text-primary transition-colors duration-300">
+                                            <i class="fas fa-book mr-2"></i>
+                                            Gate Library
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Configuration -->
+                    <div class="mb-8">
+                        <h2 class="orbitron text-xl font-medium mb-4">Advanced Configuration</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="neo-card p-5">
+                                <div class="flex items-center mb-6">
+                                    <div class="w-10 h-10 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                        <i class="fas fa-sliders-h text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <div class="orbitron text-base">Hardware Parameters</div>
+                                        <div class="text-xs text-text-dim">Adjust system specifications</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="text-sm mb-1 block">Microwave Drive Frequency (GHz)</label>
+                                        <div class="flex items-center">
+                                            <input type="range" min="4.5" max="5.5" step="0.01" value="5.02" class="w-full mr-3 appearance-none h-2 bg-card rounded-full outline-none">
+                                            <span class="text-sm font-mono whitespace-nowrap">5.02 GHz</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="text-sm mb-1 block">Drive Amplitude (a.u.)</label>
+                                        <div class="flex items-center">
+                                            <input type="range" min="0" max="1" step="0.01" value="0.75" class="w-full mr-3 appearance-none h-2 bg-card rounded-full outline-none">
+                                            <span class="text-sm font-mono whitespace-nowrap">0.75</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="text-sm mb-1 block">Gate Duration (ns)</label>
+                                        <div class="flex items-center">
+                                            <input type="range" min="10" max="200" step="1" value="40" class="w-full mr-3 appearance-none h-2 bg-card rounded-full outline-none">
+                                            <span class="text-sm font-mono whitespace-nowrap">40 ns</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="text-sm mb-1 block">Measurement Duration (ns)</label>
+                                        <div class="flex items-center">
+                                            <input type="range" min="100" max="1000" step="10" value="400" class="w-full mr-3 appearance-none h-2 bg-card rounded-full outline-none">
+                                            <span class="text-sm font-mono whitespace-nowrap">400 ns</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 flex space-x-3">
+                                    <button class="flex-1 bg-primary hover:bg-primary-dark text-white text-sm font-medium py-2 rounded-md transition-all duration-300 shadow-md">
+                                        Apply Changes
+                                    </button>
+                                    <button class="px-4 py-2 rounded-md border border-white border-opacity-10 hover:bg-card text-sm transition-colors duration-300">
+                                        <i class="fas fa-redo"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="neo-card p-5">
+                                <div class="flex items-center mb-6">
+                                    <div class="w-10 h-10 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                        <i class="fas fa-tools text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <div class="orbitron text-base">Calibration & Diagnostics</div>
+                                        <div class="text-xs text-text-dim">System maintenance tools</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <button class="w-full neo-card hover:bg-primary hover:bg-opacity-20 p-3 rounded-md flex items-center transition-all duration-300">
+                                        <div class="w-8 h-8 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                            <i class="fas fa-sync text-primary text-xs"></i>
+                                        </div>
+                                        <div class="flex-grow text-left">
+                                            <div class="text-sm">Run Full Calibration</div>
+                                            <div class="text-xs text-text-dim">Estimated time: 3 min</div>
+                                        </div>
+                                    </button>
+                                    
+                                    <button class="w-full neo-card hover:bg-primary hover:bg-opacity-20 p-3 rounded-md flex items-center transition-all duration-300">
+                                        <div class="w-8 h-8 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                            <i class="fas fa-chart-line text-primary text-xs"></i>
+                                        </div>
+                                        <div class="flex-grow text-left">
+                                            <div class="text-sm">Quantum State Tomography</div>
+                                            <div class="text-xs text-text-dim">Full state characterization</div>
+                                        </div>
+                                    </button>
+                                    
+                                    <button class="w-full neo-card hover:bg-primary hover:bg-opacity-20 p-3 rounded-md flex items-center transition-all duration-300">
+                                        <div class="w-8 h-8 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                            <i class="fas fa-heartbeat text-primary text-xs"></i>
+                                        </div>
+                                        <div class="flex-grow text-left">
+                                            <div class="text-sm">System Health Check</div>
+                                            <div class="text-xs text-text-dim">Hardware diagnostics</div>
+                                        </div>
+                                    </button>
+                                    
+                                    <button class="w-full neo-card hover:bg-primary hover:bg-opacity-20 p-3 rounded-md flex items-center transition-all duration-300">
+                                        <div class="w-8 h-8 rounded-md bg-primary bg-opacity-20 flex items-center justify-center mr-3">
+                                            <i class="fas fa-file-export text-primary text-xs"></i>
+                                        </div>
+                                        <div class="flex-grow text-left">
+                                            <div class="text-sm">Export Diagnostic Data</div>
+                                            <div class="text-xs text-text-dim">For troubleshooting</div>
+                                        </div>
+                                    </button>
+                                </div>
+                                
+                                <div class="mt-6 p-3 rounded-md bg-primary bg-opacity-10 border border-primary border-opacity-20">
+                                    <div class="flex items-start">
+                                        <i class="fas fa-info-circle text-primary mt-0.5 mr-2"></i>
+                                        <div>
+                                            <div class="text-xs">Last full calibration: <span class="text-primary">Today at 05:14</span></div>
+                                            <div class="text-xs text-text-dim mt-1">System is operating within optimal parameters</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <footer class="mt-12 mb-6 text-center">
+                        <div class="flex items-center justify-center mb-4">
+                            <div class="h-px bg-white bg-opacity-10 flex-grow"></div>
+                            <div class="px-4">
+                                <div class="hexagon">
+                                    <i class="fas fa-atom text-xs text-white"></i>
+                                </div>
+                            </div>
+                            <div class="h-px bg-white bg-opacity-10 flex-grow"></div>
+                        </div>
+                        <div class="text-sm">KATMAI QUANTUM · RP2350 1-QUBIT SYSTEM</div>
+                        <div class="text-xs text-text-dim mt-1">Firmware v2.7.4 · Serial: KTM-24-0582-QC</div>
+                    </footer>
                 </div>
             </div>
         </div>
-
-        <!-- Gradient accent bar -->
-        <div class="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-green-500"></div>
     </div>
-
+    
     <script>
-        // Update time
+        // Display current time
         function updateTime() {
             const now = new Date();
-            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
-                           now.getMinutes().toString().padStart(2, '0');
-            document.getElementById('time').textContent = timeStr;
+            const time = now.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('time').innerText = time;
         }
         
+        // Update time every second
         updateTime();
-        setInterval(updateTime, 60000);
+        setInterval(updateTime, 1000);
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                // Mobile menu functionality would go here
+                alert('Mobile menu clicked');
+            });
+        }
     </script>
 </body>
 </html>
